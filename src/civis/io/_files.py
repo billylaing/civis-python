@@ -175,10 +175,11 @@ def _multipart_upload(buf, name, file_size, client, **kwargs):
 
         log.debug("Completed upload of file part %s", part_num)
 
-        pool = Pool(MAX_THREADS)
-        log.info("Pool created!")
+
     try:
         # upload each part
+        pool = Pool(MAX_THREADS)
+        log.info(f"Pool created!, {pool}")
         _upload_part = partial(
             _upload_part_base,
             file_path=buf.name,
