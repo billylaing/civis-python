@@ -191,9 +191,9 @@ def _multipart_upload(buf, name, file_size, client, **kwargs):
 
     # complete the multipart upload; an abort will be triggered
     # if any part except the last failed to upload at least 5MB
-    finally:
+    # finally:
         # pool.terminate()
-        client.files.post_multipart_complete(file_response.id)
+        # client.files.post_multipart_complete(file_response.id)
 
     log.debug("Uploaded File %d", file_response.id)
     return file_response.id
