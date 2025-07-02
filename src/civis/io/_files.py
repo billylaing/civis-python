@@ -38,7 +38,7 @@ MIN_MULTIPART_SIZE = 50 * 2**20  # 50MB
 MIN_PART_SIZE = 5 * 2**20  # 5MB
 MAX_PART_SIZE = 5 * 2**30  # 5GB
 MAX_FILE_SIZE = 5 * 2**40  # 5TB
-MAX_THREADS = 4
+MAX_THREADS = min(os.cpu_count(), 4)
 
 RETRY_EXCEPTIONS = (
     requests.HTTPError,
@@ -47,6 +47,7 @@ RETRY_EXCEPTIONS = (
 )
 
 log = logging.getLogger(__name__)
+log.error("MAX_THREADS: %s", MAX_THREADS)
 # standard chunk size; provides good performance across various buffer sizes
 CHUNK_SIZE = 32 * 1024
 
@@ -178,8 +179,9 @@ def _multipart_upload(buf, name, file_size, client, **kwargs):
 
     try:
         # upload each part
+        log.error("MAX_THREADS: %s", MAX_THREADS)
         pool = Pool(MAX_THREADS)
-        log.info(f"Pool created!, {pool}")
+        log.error(f"Pool created!, {pool}")
         _upload_part = partial(
             _upload_part_base,
             file_path=buf.name,
