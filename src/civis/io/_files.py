@@ -176,24 +176,23 @@ def _multipart_upload(buf, name, file_size, client, **kwargs):
         log.debug("Completed upload of file part %s", part_num)
 
 
-    try:
+    # try:
         # upload each part
-        log.error("MAX_THREADS: %s", MAX_THREADS)
-        pool = Pool(MAX_THREADS)
-        log.error(f"Pool created!, {pool}")
-        _upload_part = partial(
-            _upload_part_base,
-            file_path=buf.name,
-            part_size=part_size,
-            file_size=file_size,
-        )
-        pool.map(_upload_part, enumerate(urls))
+    pool = Pool(MAX_THREADS)
+    log.error(f"Pool created!, {pool}")
+    _upload_part = partial(
+        _upload_part_base,
+        file_path=buf.name,
+        part_size=part_size,
+        file_size=file_size,
+    )
+    pool.map(_upload_part, enumerate(urls))
 
     # complete the multipart upload; an abort will be triggered
     # if any part except the last failed to upload at least 5MB
     # finally:
-        # pool.terminate()
-        # client.files.post_multipart_complete(file_response.id)
+    pool.terminate()
+    client.files.post_multipart_complete(file_response.id)
 
     log.debug("Uploaded File %d", file_response.id)
     return file_response.id
