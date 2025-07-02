@@ -47,7 +47,6 @@ RETRY_EXCEPTIONS = (
 )
 
 log = logging.getLogger(__name__)
-log.error("MAX_THREADS: %s", MAX_THREADS)
 # standard chunk size; provides good performance across various buffer sizes
 CHUNK_SIZE = 32 * 1024
 
@@ -193,7 +192,7 @@ def _multipart_upload(buf, name, file_size, client, **kwargs):
     # complete the multipart upload; an abort will be triggered
     # if any part except the last failed to upload at least 5MB
     finally:
-        pool.terminate()
+        # pool.terminate()
         client.files.post_multipart_complete(file_response.id)
 
     log.debug("Uploaded File %d", file_response.id)
